@@ -1,7 +1,7 @@
 #include 'protheus.ch'
 #include 'parmtype.ch'
 
-//Obtém a cotação do dólar do dia anterior, via webservice e faz a atualização da tabela M2 via execauto
+//Obtém a cotação do dólar do dia anterior, via webservice e faz a atualização da tabela M2
 //Autor: Thyago Silva Campos
 
 user function DolDiaAnt()		
@@ -15,22 +15,22 @@ user function DolDiaAnt()
 	Local oXmlLibra	:= NIL								//Guarda o resultado da consulta £
 	Local oXmlIene	:= NIL								//Guarda o resultado da consulta ¥	
 	
-	oWs:getUltimoValorXML(1)		
+	oWs:getUltimoValorXML(1)							//Obtendo cotação Dólar
 	oXmlDolar := XmlParser(oWs:cgetUltimoValorXMLReturn, "_", @cError, @cWarning)
 	
-	oWs:getUltimoValorXML(21619)	
+	oWs:getUltimoValorXML(21619)						//Obtendo cotação Euro
 	oXmlEuro := XmlParser(oWs:cgetUltimoValorXMLReturn, "_", @cError, @cWarning)
 	
-	oWs:getUltimoValorXML(21621)	
+	oWs:getUltimoValorXML(21621)						//Obtendo cotação Libra
 	oXmlLibra := XmlParser(oWs:cgetUltimoValorXMLReturn, "_", @cError, @cWarning)
 	
-	oWs:getUltimoValorXML(21623)			 		
+	oWs:getUltimoValorXML(21623)			 			//Obtendo cotação Iene
 	oXmlIene := XmlParser(oWs:cgetUltimoValorXMLReturn, "_", @cError, @cWarning)	
 
+	//Inserindo as cotações na tabela de moedas
     DbSelectArea("SM2")
 	DbSetOrder(1)
-	IF MsSeek(Date())
-		MsgInfo("Data encontrada")
+	IF MsSeek(Date())		
 		Reclock("SM2",.F.) 
 		SM2->M2_MOEDA2 := Val(StrTran(oXmlDolar:_RESPOSTA:_SERIE:_VALOR:TEXT,",","."))
 		SM2->M2_MOEDA4 := Val(StrTran(oXmlEuro:_RESPOSTA:_SERIE:_VALOR:TEXT,",","."))
