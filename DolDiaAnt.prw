@@ -26,7 +26,7 @@ user function DolDiaAnt()
 	
 	oWs:getUltimoValorXML(21623)			 			//Obtendo cotação Iene
 	oXmlIene := XmlParser(oWs:cgetUltimoValorXMLReturn, "_", @cError, @cWarning)	
-
+	
 	//Inserindo as cotações na tabela de moedas
     DbSelectArea("SM2")
 	DbSetOrder(1)
