@@ -30,13 +30,21 @@ user function DolDiaAnt()
 	//Inserindo as cotações na tabela de moedas
     DbSelectArea("SM2")
 	DbSetOrder(1)
-	IF MsSeek(Date())		
-		Reclock("SM2",.F.) 
+	
+	If (MsSeek(Date()))									//Se existir um registro com a data, executamos uma atualização														
+		Reclock("SM2",.F.)																												
 		SM2->M2_MOEDA2 := Val(StrTran(oXmlDolar:_RESPOSTA:_SERIE:_VALOR:TEXT,",","."))
 		SM2->M2_MOEDA4 := Val(StrTran(oXmlEuro:_RESPOSTA:_SERIE:_VALOR:TEXT,",","."))
 		SM2->M2_MOEDA5 := Val(StrTran(oXmlLibra:_RESPOSTA:_SERIE:_VALOR:TEXT,",","."))
-		SM2->M2_MOEDA6 := Val(StrTran(oXmlIene:_RESPOSTA:_SERIE:_VALOR:TEXT,",","."))
-		MsUnlock("SM2") 		
-	End If
-		
+		SM2->M2_MOEDA6 := Val(StrTran(oXmlIene:_RESPOSTA:_SERIE:_VALOR:TEXT,",","."))	 		
+		MsUnlock()		
+	Else 												//Caso não exista registro com a data, executamos uma inserção
+		Reclock("SM2",.T.)																															
+		SM2->M2_DATA := Date()		
+		SM2->M2_MOEDA2 := Val(StrTran(oXmlDolar:_RESPOSTA:_SERIE:_VALOR:TEXT,",","."))
+		SM2->M2_MOEDA4 := Val(StrTran(oXmlEuro:_RESPOSTA:_SERIE:_VALOR:TEXT,",","."))
+		SM2->M2_MOEDA5 := Val(StrTran(oXmlLibra:_RESPOSTA:_SERIE:_VALOR:TEXT,",","."))
+		SM2->M2_MOEDA6 := Val(StrTran(oXmlIene:_RESPOSTA:_SERIE:_VALOR:TEXT,",","."))	 		
+		MsUnlock()	
+	EndIf
 Return
